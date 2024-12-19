@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Entities;
-using Pizza4Ps.CustomerService.Domain.Entities;
 using Pizza4Ps.CustomerService.Domain.Entities.Identity;
 using Pizza4Ps.CustomerService.Persistence.Intercepter;
 using System.Linq.Expressions;
 
 namespace Pizza4Ps.CustomerService.Persistence
 {
-    public sealed class ApplicationDBContext : IdentityDbContext<AppUser, AppRole, Guid>
+	public sealed class ApplicationDBContext : IdentityDbContext<AppUser, AppRole, Guid>
     {
         private readonly AuditSaveChangesInterceptor _auditInterceptor;
 

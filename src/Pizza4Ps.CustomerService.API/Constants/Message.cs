@@ -1,6 +1,6 @@
 ﻿namespace Pizza4Ps.CustomerService.API.Constants
 {
-    public static class MESSAGE
+    public static class Message
     {
         internal const string CREATED_SUCCESS = "Item created successfully";
         internal const string UPDATED_SUCCESS = "Item updated successfully";

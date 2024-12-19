@@ -1,10 +1,10 @@
 ﻿namespace Pizza4Ps.CustomerService.Domain.Constants
 {
-    public class BusinessErrorConstant
+    public static class BussinessErrorConstants
     {
         public class ProductErrorConstant
         {
-            public const string NOT_FOUND = "Món ăn không tìm thấy";
+            public const string PRODUCT_NOT_FOUND = "Món ăn không tìm thấy";
         }
     }
 }

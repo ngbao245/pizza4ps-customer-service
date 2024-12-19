@@ -4,6 +4,7 @@ using Pizza4Ps.CustomerService.Domain.Abstractions.Entities;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories.RepositoryBase;
 using Pizza4Ps.CustomerService.Domain.Exceptions;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Pizza4Ps.CustomerService.Persistence
 {
@@ -25,36 +26,40 @@ namespace Pizza4Ps.CustomerService.Persistence
 
         //Get
         public IQueryable<TEntity> GetListAsNoTracking(Expression<Func<TEntity, bool>>? predicate = null,
-            params Expression<Func<TEntity, object>>[]? includeProperties)
+            string includeProperties = "")
         {
             IQueryable<TEntity> items = _dbContext.Set<TEntity>().AsNoTracking(); // Importance Always include AsNoTracking for Query Side
             if (predicate is not null)
                 items = items.Where(predicate);
-            if (includeProperties != null)
-                foreach (var includeProperty in includeProperties)
-                    items = items.Include(includeProperty);
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                items = items.Include(includeProperty);
+            }
             return items;
         }
 
         //Update, Delete
         public IQueryable<TEntity> GetListAsTracking(Expression<Func<TEntity, bool>>? predicate = null,
-            params Expression<Func<TEntity, object>>[]? includeProperties)
+            string includeProperties = "")
         {
             IQueryable<TEntity> items = _dbContext.Set<TEntity>().AsTracking(); // Importance Always include AsNoTracking for Query Side
             if (predicate is not null)
                 items = items.Where(predicate);
-            if (includeProperties != null)
-                foreach (var includeProperty in includeProperties)
-                    items = items.Include(includeProperty);
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                items = items.Include(includeProperty);
+            }
             return items;
         }
 
-        public async Task<TEntity> GetSingleByIdAsync(TKey id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
+        public async Task<TEntity> GetSingleByIdAsync(TKey id, string includeProperties = "", CancellationToken cancellationToken = default)
             => await GetListAsTracking(null, includeProperties)
             .SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
 
 
-        public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
+        public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>>? predicate = null, string includeProperties = "", CancellationToken cancellationToken = default)
             => await GetListAsTracking(null, includeProperties)
             .SingleOrDefaultAsync(predicate, cancellationToken);
 
