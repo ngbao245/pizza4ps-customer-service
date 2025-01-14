@@ -1,5 +1,4 @@
-﻿using Pizza4Ps.CustomerService.Domain.Entities;
-using Pizza4Ps.CustomerService.Domain.Enums;
+﻿using Pizza4Ps.CustomerService.Domain.Enums;
 
 namespace Pizza4Ps.CustomerService.Application.DTOs.Customers
 {
