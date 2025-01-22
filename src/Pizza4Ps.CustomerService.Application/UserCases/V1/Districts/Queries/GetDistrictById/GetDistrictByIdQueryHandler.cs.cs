@@ -5,7 +5,7 @@ using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.GetDistrictById
 {
-    public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, GetDistrictByIdQueryResponse>
+    public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, DistrictDto>
     {
         private readonly IMapper _mapper;
         private readonly IDistrictRepository _districtRepository;
@@ -16,14 +16,11 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.Ge
             _districtRepository = districtRepository;
         }
 
-        public async Task<GetDistrictByIdQueryResponse> Handle(GetDistrictByIdQuery request, CancellationToken cancellationToken)
+        public async Task<DistrictDto> Handle(GetDistrictByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _districtRepository.GetSingleByIdAsync(request.Id, request.includeProperties);
+            var entity = await _districtRepository.GetSingleByIdAsync(request.Id, request.IncludeProperties);
             var result = _mapper.Map<DistrictDto>(entity);
-            return new GetDistrictByIdQueryResponse
-            {
-                District = result
-            };
+            return result;
         }
     }
 }

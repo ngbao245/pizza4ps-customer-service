@@ -1,9 +1,11 @@
-﻿using Pizza4Ps.CustomerService.Domain.Enums;
+﻿using Pizza4Ps.CustomerService.Domain.Entities;
+using Pizza4Ps.CustomerService.Domain.Enums;
 
-namespace Pizza4Ps.CustomerService.Application.DTOs.Customers
+namespace Pizza4Ps.CustomerService.Application.DTOs
 {
-    public class CreateCustomerDto
+    public class CustomerDto
     {
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public GenderEnum Gender { get; set; }
@@ -12,5 +14,7 @@ namespace Pizza4Ps.CustomerService.Application.DTOs.Customers
         public string PhoneNumber { get; set; }
         public string Avatar { get; set; }
         public Guid StreetId { get; set; }
+
+        public virtual Street Street { get; set; }
     }
 }

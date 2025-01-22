@@ -1,7 +1,7 @@
 ﻿using Pizza4Ps.CustomerService.Domain.Entities;
 using static Pizza4Ps.CustomerService.Domain.Enums.VoucherEnum;
 
-namespace Pizza4Ps.CustomerService.Application.DTOs.Vouchers
+namespace Pizza4Ps.CustomerService.Application.DTOs
 {
     public class VoucherDto
     {

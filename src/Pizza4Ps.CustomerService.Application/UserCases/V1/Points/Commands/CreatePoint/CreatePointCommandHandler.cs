@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Services;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.CreatePoint
 {
-    public class CreatePointCommandHandler : IRequestHandler<CreatePointCommand, CreatePointCommandResponse>
+    public class CreatePointCommandHandler : IRequestHandler<CreatePointCommand, ResultDto<Guid>>
     {
         private readonly IPointService _pointService;
 
@@ -12,13 +13,13 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.Crea
             _pointService = pointService;
         }
 
-        public async Task<CreatePointCommandResponse> Handle(CreatePointCommand request, CancellationToken cancellationToken)
+        public async Task<ResultDto<Guid>> Handle(CreatePointCommand request, CancellationToken cancellationToken)
         {
             var result = await _pointService.CreateAsync(
-                request.CreatePointDto.Score,
-                request.CreatePointDto.ExpiryDate,
-                request.CreatePointDto.CustomerId);
-            return new CreatePointCommandResponse
+                request.Score,
+                request.ExpiryDate,
+                request.CustomerId);
+            return new ResultDto<Guid>
             {
                 Id = result
             };

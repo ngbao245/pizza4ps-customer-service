@@ -1,10 +1,17 @@
-﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.Vouchers;
+﻿using Pizza4Ps.CustomerService.Application.Abstractions;
+using Pizza4Ps.CustomerService.Application.DTOs;
+using static Pizza4Ps.CustomerService.Domain.Enums.VoucherEnum;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Vouchers.Queries.GetListVoucher
 {
-    public class GetListVoucherQuery : IRequest<GetListVoucherQueryResponse>
+    public class GetListVoucherQuery : PaginatedQuery<PaginatedResultDto<VoucherDto>>
     {
-        public GetListVoucherDto GetListVoucherDto { get; set; }
+        public string? Code { get; set; }
+        public DiscountTypeEnum? DiscountType { get; set; }
+        public decimal? Value { get; set; }
+        public int? PointUsed { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public VoucherStatusEnum? Status { get; set; }
+        public Guid? CustomerId { get; set; }
     }
 }

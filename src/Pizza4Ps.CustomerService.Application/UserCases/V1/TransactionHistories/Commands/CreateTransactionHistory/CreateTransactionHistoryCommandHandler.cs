@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.CreateTransactionHistory;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Services;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.CreateTransactionHistory
 {
-    public class CreateTransactionHistoryCommandHandler : IRequestHandler<CreateTransactionHistoryCommand, CreateTransactionHistoryCommandResponse>
+    public class CreateTransactionHistoryCommandHandler : IRequestHandler<CreateTransactionHistoryCommand, ResultDto<Guid>>
     {
         private readonly ITransactionHistoryService _transactionhistoryService;
 
@@ -13,14 +13,14 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories
             _transactionhistoryService = transactionhistoryService;
         }
 
-        public async Task<CreateTransactionHistoryCommandResponse> Handle(CreateTransactionHistoryCommand request, CancellationToken cancellationToken)
+        public async Task<ResultDto<Guid>> Handle(CreateTransactionHistoryCommand request, CancellationToken cancellationToken)
         {
             var result = await _transactionhistoryService.CreateAsync(
-                request.CreateTransactionHistoryDto.TransactionDate,
-                request.CreateTransactionHistoryDto.Total,
-                request.CreateTransactionHistoryDto.TransactionId,
-                request.CreateTransactionHistoryDto.CustomerId);
-            return new CreateTransactionHistoryCommandResponse
+                request.TransactionDate,
+                request.Total,
+                request.TransactionId,
+                request.CustomerId);
+            return new ResultDto<Guid>
             {
                 Id = result
             };

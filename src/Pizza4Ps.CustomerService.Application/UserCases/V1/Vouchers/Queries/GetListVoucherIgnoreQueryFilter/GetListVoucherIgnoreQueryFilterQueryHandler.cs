@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Pizza4Ps.CustomerService.Application.DTOs.Vouchers;
+using Pizza4Ps.CustomerService.Application.Abstractions;
+using Pizza4Ps.CustomerService.Application.DTOs;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories;
 using System.Linq.Dynamic.Core;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Vouchers.Queries.GetListVoucherIgnoreQueryFilter
 {
-    public class GetListVoucherIgnoreQueryFilterQueryHandler : IRequestHandler<GetListVoucherIgnoreQueryFilterQuery, GetListVoucherIgnoreQueryFilterQueryResponse>
+    public class GetListVoucherIgnoreQueryFilterQueryHandler : IRequestHandler<GetListVoucherIgnoreQueryFilterQuery, PaginatedResultDto<VoucherDto>>
     {
         private readonly IMapper _mapper;
         private readonly IVoucherRepository _voucherRepository;
@@ -18,24 +19,24 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Vouchers.Queries.Get
             _voucherRepository = voucherRepository;
         }
 
-        public async Task<GetListVoucherIgnoreQueryFilterQueryResponse> Handle(GetListVoucherIgnoreQueryFilterQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResultDto<VoucherDto>> Handle(GetListVoucherIgnoreQueryFilterQuery request, CancellationToken cancellationToken)
         {
-            var query = _voucherRepository.GetListAsNoTracking(includeProperties: request.GetListVoucherIgnoreQueryFilterDto.includeProperties).IgnoreQueryFilters()
+            var query = _voucherRepository.GetListAsNoTracking(includeProperties: request.IncludeProperties).IgnoreQueryFilters()
                 .Where(
-                    x => (request.GetListVoucherIgnoreQueryFilterDto.Code == null || x.Code.Contains(request.GetListVoucherIgnoreQueryFilterDto.Code))
-                    && (request.GetListVoucherIgnoreQueryFilterDto.DiscountType == null || x.DiscountType == request.GetListVoucherIgnoreQueryFilterDto.DiscountType)
-                    && (request.GetListVoucherIgnoreQueryFilterDto.Value == null || x.Value == request.GetListVoucherIgnoreQueryFilterDto.Value)
-                    && (request.GetListVoucherIgnoreQueryFilterDto.PointUsed == null || x.PointUsed == request.GetListVoucherIgnoreQueryFilterDto.PointUsed)
-                    && (request.GetListVoucherIgnoreQueryFilterDto.ExpiryDate == null || x.ExpiryDate == request.GetListVoucherIgnoreQueryFilterDto.ExpiryDate)
-                    && (request.GetListVoucherIgnoreQueryFilterDto.Status == null || x.Status == request.GetListVoucherIgnoreQueryFilterDto.Status)
-                    && (request.GetListVoucherIgnoreQueryFilterDto.CustomerId == null || x.CustomerId == request.GetListVoucherIgnoreQueryFilterDto.CustomerId)
-                    && x.IsDeleted == request.GetListVoucherIgnoreQueryFilterDto.IsDeleted);
+                    x => (request.Code == null || x.Code.Contains(request.Code))
+                    && (request.DiscountType == null || x.DiscountType == request.DiscountType)
+                    && (request.Value == null || x.Value == request.Value)
+                    && (request.PointUsed == null || x.PointUsed == request.PointUsed)
+                    && (request.ExpiryDate == null || x.ExpiryDate == request.ExpiryDate)
+                    && (request.Status == null || x.Status == request.Status)
+                    && (request.CustomerId == null || x.CustomerId == request.CustomerId)
+                    && x.IsDeleted == request.IsDeleted);
             var entities = await query
-                .OrderBy(request.GetListVoucherIgnoreQueryFilterDto.SortBy)
-                .Skip(request.GetListVoucherIgnoreQueryFilterDto.SkipCount).Take(request.GetListVoucherIgnoreQueryFilterDto.TakeCount).ToListAsync();
+                .OrderBy(request.SortBy)
+                .Skip(request.SkipCount).Take(request.TakeCount).ToListAsync();
             var result = _mapper.Map<List<VoucherDto>>(entities);
             var totalCount = await query.CountAsync();
-            return new GetListVoucherIgnoreQueryFilterQueryResponse(result, totalCount);
+            return new PaginatedResultDto<VoucherDto>(result, totalCount);
         }
     }
 }

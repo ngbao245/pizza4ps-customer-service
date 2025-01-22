@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Pizza4Ps.CustomerService.Application.DTOs.Points;
+using Pizza4Ps.CustomerService.Application.Abstractions;
+using Pizza4Ps.CustomerService.Application.DTOs;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories;
 using Pizza4Ps.CustomerService.Domain.Constants;
 using Pizza4Ps.CustomerService.Domain.Exceptions;
@@ -9,7 +10,7 @@ using System.Linq.Dynamic.Core;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Queries.GetListPoint
 {
-    public class GetListPointQueryHandler : IRequestHandler<GetListPointQuery, GetListPointQueryResponse>
+    public class GetListPointQueryHandler : IRequestHandler<GetListPointQuery, PaginatedResultDto<PointDto>>
     {
         private readonly IMapper _mapper;
         private readonly IPointRepository _pointRepository;
@@ -20,21 +21,21 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Queries.GetLi
             _pointRepository = pointRepository;
         }
 
-        public async Task<GetListPointQueryResponse> Handle(GetListPointQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResultDto<PointDto>> Handle(GetListPointQuery request, CancellationToken cancellationToken)
         {
             var query = _pointRepository.GetListAsNoTracking(
-                x => (request.GetListPointDto.Score == null || x.Score == request.GetListPointDto.Score)
-                && (request.GetListPointDto.ExpiryDate == null || x.ExpiryDate == request.GetListPointDto.ExpiryDate)
-                && (request.GetListPointDto.CustomerId == null || x.CustomerId == request.GetListPointDto.CustomerId),
-                includeProperties: request.GetListPointDto.includeProperties);
+                x => (request.Score == null || x.Score == request.Score)
+                && (request.ExpiryDate == null || x.ExpiryDate == request.ExpiryDate)
+                && (request.CustomerId == null || x.CustomerId == request.CustomerId),
+                includeProperties: request.IncludeProperties);
             var entities = await query
-                .OrderBy(request.GetListPointDto.SortBy)
-                .Skip(request.GetListPointDto.SkipCount).Take(request.GetListPointDto.TakeCount).ToListAsync();
+                .OrderBy(request.SortBy)
+                .Skip(request.SkipCount).Take(request.TakeCount).ToListAsync();
             if (!entities.Any())
                 throw new BusinessException(BussinessErrorConstants.PointErrorConstant.POINT_NOT_FOUND);
             var result = _mapper.Map<List<PointDto>>(entities);
             var totalCount = await query.CountAsync();
-            return new GetListPointQueryResponse(result, totalCount);
+            return new PaginatedResultDto<PointDto>(result, totalCount);
         }
     }
 }

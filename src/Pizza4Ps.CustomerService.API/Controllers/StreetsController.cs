@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Pizza4Ps.CustomerService.API.Constants;
 using Pizza4Ps.CustomerService.API.Models;
-using Pizza4Ps.CustomerService.Application.DTOs.Streets;
-using Pizza4Ps.CustomerService.Application.UserCases.V1.Streets.Queries.GetStreetById;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Streets.Queries.GetListStreet;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Streets.Queries.GetListStreetIgnoreQueryFilter;
+using Pizza4Ps.CustomerService.Application.UserCases.V1.Streets.Queries.GetStreetById;
 
 namespace Pizza4Ps.CustomerService.API.Controllers
 {
@@ -23,9 +22,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet("ignore-filter")]
-        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListStreetIgnoreQueryFilterDto query)
+        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListStreetIgnoreQueryFilterQuery query)
         {
-            var result = await _sender.Send(new GetListStreetIgnoreQueryFilterQuery { GetListStreetIgnoreQueryFilterDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -35,9 +34,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetListAsync([FromQuery] GetListStreetDto query)
+        public async Task<IActionResult> GetListAsync([FromQuery] GetListStreetQuery query)
         {
-            var result = await _sender.Send(new GetListStreetQuery { GetListStreetDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,

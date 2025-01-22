@@ -1,10 +1,14 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.TransactionHistories;
+using Pizza4Ps.CustomerService.Application.Abstractions;
+using Pizza4Ps.CustomerService.Application.DTOs;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Queries.GetListTransactionHistory
 {
-    public class GetListTransactionHistoryQuery : IRequest<GetListTransactionHistoryQueryResponse>
+    public class GetListTransactionHistoryQuery : PaginatedQuery<PaginatedResultDto<TransactionHistoryDto>>
     {
-        public GetListTransactionHistoryDto GetListTransactionHistoryDto { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public decimal? Total { get; set; }
+        public Guid? TransactionId { get; set; }
+        public Guid? CustomerId { get; set; }
     }
 }

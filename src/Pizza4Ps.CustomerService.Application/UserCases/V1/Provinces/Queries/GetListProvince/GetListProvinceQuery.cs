@@ -1,10 +1,11 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.Provinces;
+using Pizza4Ps.CustomerService.Application.Abstractions;
+using Pizza4Ps.CustomerService.Application.DTOs;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Provinces.Queries.GetListProvince
 {
-    public class GetListProvinceQuery : IRequest<GetListProvinceQueryResponse>
+    public class GetListProvinceQuery : PaginatedQuery<PaginatedResultDto<ProvinceDto>>
     {
-        public GetListProvinceDto GetListProvinceDto { get; set; }
+        public string? Name { get; set; }
     }
 }

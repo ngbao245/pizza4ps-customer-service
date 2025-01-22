@@ -1,11 +1,13 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.TransactionHistories;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.UpdateTransactionHistory
 {
-    public class UpdateTransactionHistoryCommand : IRequest<UpdateTransactionHistoryCommandResponse>
+    public class UpdateTransactionHistoryCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public UpdateTransactionHistoryDto UpdateTransactionHistoryDto { get; set; }
+        public Guid? Id { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public decimal Total { get; set; }
+        public Guid TransactionId { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

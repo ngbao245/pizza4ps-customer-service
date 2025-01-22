@@ -1,11 +1,12 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.Points;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.UpdatePoint
 {
-    public class UpdatePointCommand : IRequest<UpdatePointCommandResponse>
+    public class UpdatePointCommand : IRequest
     {
-        public Guid Id { get; set; }
-        public UpdatePointDto UpdatePointDto { get; set; }
+        public Guid? Id { get; set; }
+        public int Score { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

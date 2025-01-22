@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Pizza4Ps.CustomerService.API.Constants;
 using Pizza4Ps.CustomerService.API.Models;
-using Pizza4Ps.CustomerService.Application.DTOs.Wards;
-using Pizza4Ps.CustomerService.Application.UserCases.V1.Wards.Queries.GetWardById;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Wards.Queries.GetListWard;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Wards.Queries.GetListWardIgnoreQueryFilter;
+using Pizza4Ps.CustomerService.Application.UserCases.V1.Wards.Queries.GetWardById;
 
 namespace Pizza4Ps.CustomerService.API.Controllers
 {
@@ -23,9 +22,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet("ignore-filter")]
-        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListWardIgnoreQueryFilterDto query)
+        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListWardIgnoreQueryFilterQuery query)
         {
-            var result = await _sender.Send(new GetListWardIgnoreQueryFilterQuery { GetListWardIgnoreQueryFilterDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -35,9 +34,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetListAsync([FromQuery] GetListWardDto query)
+        public async Task<IActionResult> GetListAsync([FromQuery] GetListWardQuery query)
         {
-            var result = await _sender.Send(new GetListWardQuery { GetListWardDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,

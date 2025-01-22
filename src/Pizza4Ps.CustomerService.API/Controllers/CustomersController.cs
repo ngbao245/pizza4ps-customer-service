@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Pizza4Ps.CustomerService.API.Constants;
 using Pizza4Ps.CustomerService.API.Models;
-using Pizza4Ps.CustomerService.Application.DTOs.Customers;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Customers.Commands.CreateCustomer;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Customers.Commands.DeleteCustomer;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.Customers.Commands.RestoreCustomer;
@@ -27,9 +26,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateCustomerDto request)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCustomerCommand request)
         {
-            var result = await _sender.Send(new CreateCustomerCommand { CreateCustomerDto = request });
+            var result = await _sender.Send(request);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -39,9 +38,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet("ignore-filter")]
-        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListCustomerIgnoreQueryFilterDto query)
+        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListCustomerIgnoreQueryFilterQuery query)
         {
-            var result = await _sender.Send(new GetListCustomerIgnoreQueryFilterQuery { GetListCustomerIgnoreQueryFilterDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -51,9 +50,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetListAsync([FromQuery] GetListCustomerDto query)
+        public async Task<IActionResult> GetListAsync([FromQuery] GetListCustomerQuery query)
         {
-            var result = await _sender.Send(new GetListCustomerQuery { GetListCustomerDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -75,12 +74,13 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateCustomerDto request)
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateCustomerCommand request)
         {
-            var result = await _sender.Send(new UpdateCustomerCommand { Id = id, UpdateCustomerDto = request });
+            request.Id = id;
+            await _sender.Send(request);
             return Ok(new ApiResponse
             {
-                Result = result,
+                Success = true,
                 Message = Message.UPDATED_SUCCESS,
                 StatusCode = StatusCodes.Status200OK
             });

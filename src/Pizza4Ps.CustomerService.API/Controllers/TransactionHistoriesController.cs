@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Pizza4Ps.CustomerService.API.Constants;
 using Pizza4Ps.CustomerService.API.Models;
-using Pizza4Ps.CustomerService.Application.DTOs.TransactionHistories;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.CreateTransactionHistory;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.DeleteTransactionHistory;
 using Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.RestoreTransactionHistory;
@@ -27,9 +26,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateTransactionHistoryDto request)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTransactionHistoryCommand request)
         {
-            var result = await _sender.Send(new CreateTransactionHistoryCommand { CreateTransactionHistoryDto = request });
+            var result = await _sender.Send(request);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -39,9 +38,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet("ignore-filter")]
-        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListTransactionHistoryIgnoreQueryFilterDto query)
+        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListTransactionHistoryIgnoreQueryFilterQuery query)
         {
-            var result = await _sender.Send(new GetListTransactionHistoryIgnoreQueryFilterQuery { GetListTransactionHistoryIgnoreQueryFilterDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -51,9 +50,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetListAsync([FromQuery] GetListTransactionHistoryDto query)
+        public async Task<IActionResult> GetListAsync([FromQuery] GetListTransactionHistoryQuery query)
         {
-            var result = await _sender.Send(new GetListTransactionHistoryQuery { GetListTransactionHistoryDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -75,12 +74,13 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateTransactionHistoryDto request)
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateTransactionHistoryCommand request)
         {
-            var result = await _sender.Send(new UpdateTransactionHistoryCommand { Id = id, UpdateTransactionHistoryDto = request });
+            request.Id = id;
+            await _sender.Send(request);
             return Ok(new ApiResponse
             {
-                Result = result,
+                Success = true,
                 Message = Message.UPDATED_SUCCESS,
                 StatusCode = StatusCodes.Status200OK
             });

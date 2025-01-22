@@ -1,4 +1,4 @@
-﻿namespace Pizza4Ps.CustomerService.Application.DTOs.Provinces
+﻿namespace Pizza4Ps.CustomerService.Application.DTOs
 {
     public class ProvinceDto
     {

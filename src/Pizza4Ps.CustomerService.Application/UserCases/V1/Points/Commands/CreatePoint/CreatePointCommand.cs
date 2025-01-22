@@ -1,10 +1,12 @@
 ﻿using MediatR;
-using Pizza4Ps.CustomerService.Application.DTOs.Points;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.CreatePoint
 {
-    public class CreatePointCommand : IRequest<CreatePointCommandResponse>
+    public class CreatePointCommand : IRequest<ResultDto<Guid>>
     {
-        public CreatePointDto CreatePointDto { get; set; }
+        public int Score { get; set; }
+        public DateTime ExpiryDate { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

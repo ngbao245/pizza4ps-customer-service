@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Services;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Vouchers.Commands.CreateVoucher
 {
-    public class CreateVoucherCommandHandler : IRequestHandler<CreateVoucherCommand, CreateVoucherCommandResponse>
+    public class CreateVoucherCommandHandler : IRequestHandler<CreateVoucherCommand, ResultDto<Guid>>
     {
         private readonly IVoucherService _voucherService;
 
@@ -12,17 +13,17 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Vouchers.Commands.Cr
             _voucherService = voucherService;
         }
 
-        public async Task<CreateVoucherCommandResponse> Handle(CreateVoucherCommand request, CancellationToken cancellationToken)
+        public async Task<ResultDto<Guid>> Handle(CreateVoucherCommand request, CancellationToken cancellationToken)
         {
             var result = await _voucherService.CreateAsync(
-                request.CreateVoucherDto.Code,
-                request.CreateVoucherDto.DiscountType,
-                request.CreateVoucherDto.Value,
-                request.CreateVoucherDto.PointUsed,
-                request.CreateVoucherDto.ExpiryDate,
-                request.CreateVoucherDto.Status,
-                request.CreateVoucherDto.CustomerId);
-            return new CreateVoucherCommandResponse
+                request.Code,
+                request.DiscountType,
+                request.Value,
+                request.PointUsed,
+                request.ExpiryDate,
+                request.Status,
+                request.CustomerId);
+            return new ResultDto<Guid>
             {
                 Id = result
             };

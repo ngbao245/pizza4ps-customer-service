@@ -3,7 +3,7 @@ using Pizza4Ps.CustomerService.Domain.Abstractions.Services;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.UpdatePoint
 {
-    public class UpdatePointCommandHandler : IRequestHandler<UpdatePointCommand, UpdatePointCommandResponse>
+    public class UpdatePointCommandHandler : IRequestHandler<UpdatePointCommand>
     {
         private readonly IPointService _pointService;
 
@@ -12,17 +12,13 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Points.Commands.Upda
             _pointService = pointService;
         }
 
-        public async Task<UpdatePointCommandResponse> Handle(UpdatePointCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdatePointCommand request, CancellationToken cancellationToken)
         {
             var result = await _pointService.UpdateAsync(
-                request.Id,
-                request.UpdatePointDto.Score,
-                request.UpdatePointDto.ExpiryDate,
-                request.UpdatePointDto.CustomerId);
-            return new UpdatePointCommandResponse
-            {
-                Id = result
-            };
+                request.Id!.Value,
+                request.Score,
+                request.ExpiryDate,
+                request.CustomerId);
         }
     }
 }

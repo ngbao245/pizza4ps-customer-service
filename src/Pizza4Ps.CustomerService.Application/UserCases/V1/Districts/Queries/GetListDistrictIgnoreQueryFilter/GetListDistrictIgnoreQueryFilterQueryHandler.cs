@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 using Pizza4Ps.CustomerService.Application.DTOs.Districts;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories;
 using System.Linq.Dynamic.Core;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.GetListDistrictIgnoreQueryFilter
 {
-    public class GetListDistrictIgnoreQueryFilterQueryHandler : IRequestHandler<GetListDistrictIgnoreQueryFilterQuery, GetListDistrictIgnoreQueryFilterQueryResponse>
+    public class GetListDistrictIgnoreQueryFilterQueryHandler : IRequestHandler<GetListDistrictIgnoreQueryFilterQuery, PaginatedResultDto<DistrictDto>>
     {
         private readonly IMapper _mapper;
         private readonly IDistrictRepository _districtRepository;
@@ -18,19 +19,19 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.Ge
             _districtRepository = districtRepository;
         }
 
-        public async Task<GetListDistrictIgnoreQueryFilterQueryResponse> Handle(GetListDistrictIgnoreQueryFilterQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResultDto<DistrictDto>> Handle(GetListDistrictIgnoreQueryFilterQuery request, CancellationToken cancellationToken)
         {
-            var query = _districtRepository.GetListAsNoTracking(includeProperties: request.GetListDistrictIgnoreQueryFilterDto.includeProperties).IgnoreQueryFilters()
+            var query = _districtRepository.GetListAsNoTracking(includeProperties: request.IncludeProperties).IgnoreQueryFilters()
                 .Where(
-                    x => (request.GetListDistrictIgnoreQueryFilterDto.Name == null || x.Name.Contains(request.GetListDistrictIgnoreQueryFilterDto.Name))
-                    && (request.GetListDistrictIgnoreQueryFilterDto.ProvinceId == null || x.ProvinceId == request.GetListDistrictIgnoreQueryFilterDto.ProvinceId)
-                    && x.IsDeleted == request.GetListDistrictIgnoreQueryFilterDto.IsDeleted);
+                    x => (request.Name == null || x.Name.Contains(request.Name))
+                    && (request.ProvinceId == null || x.ProvinceId == request.ProvinceId)
+                    && x.IsDeleted == request.IsDeleted);
             var entities = await query
-                .OrderBy(request.GetListDistrictIgnoreQueryFilterDto.SortBy)
-                .Skip(request.GetListDistrictIgnoreQueryFilterDto.SkipCount).Take(request.GetListDistrictIgnoreQueryFilterDto.TakeCount).ToListAsync();
+                .OrderBy(request.SortBy)
+                .Skip(request.SkipCount).Take(request.TakeCount).ToListAsync();
             var result = _mapper.Map<List<DistrictDto>>(entities);
             var totalCount = await query.CountAsync();
-            return new GetListDistrictIgnoreQueryFilterQueryResponse(result, totalCount);
+            return new PaginatedResultDto<DistrictDto>(result, totalCount);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Pizza4Ps.CustomerService.Domain.Entities;
 
-namespace Pizza4Ps.CustomerService.Application.DTOs.Points
+namespace Pizza4Ps.CustomerService.Application.DTOs
 {
     public class PointDto
     {

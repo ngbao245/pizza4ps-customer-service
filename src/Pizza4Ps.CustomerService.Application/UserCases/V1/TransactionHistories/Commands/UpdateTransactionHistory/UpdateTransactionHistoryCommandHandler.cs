@@ -3,7 +3,7 @@ using Pizza4Ps.CustomerService.Domain.Abstractions.Services;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories.Commands.UpdateTransactionHistory
 {
-    public class UpdateTransactionHistoryCommandHandler : IRequestHandler<UpdateTransactionHistoryCommand, UpdateTransactionHistoryCommandResponse>
+    public class UpdateTransactionHistoryCommandHandler : IRequestHandler<UpdateTransactionHistoryCommand>
     {
         private readonly ITransactionHistoryService _transactionhistoryService;
 
@@ -12,18 +12,14 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.TransactionHistories
             _transactionhistoryService = transactionhistoryService;
         }
 
-        public async Task<UpdateTransactionHistoryCommandResponse> Handle(UpdateTransactionHistoryCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateTransactionHistoryCommand request, CancellationToken cancellationToken)
         {
             var result = await _transactionhistoryService.UpdateAsync(
-                request.Id,
-                request.UpdateTransactionHistoryDto.TransactionDate,
-                request.UpdateTransactionHistoryDto.Total,
-                request.UpdateTransactionHistoryDto.TransactionId,
-                request.UpdateTransactionHistoryDto.CustomerId);
-            return new UpdateTransactionHistoryCommandResponse
-            {
-                Id = result
-            };
+                request.Id!.Value,
+                request.TransactionDate,
+                request.Total,
+                request.TransactionId,
+                request.CustomerId);
         }
     }
 }

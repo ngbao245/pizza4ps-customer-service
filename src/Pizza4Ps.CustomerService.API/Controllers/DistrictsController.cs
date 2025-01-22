@@ -23,9 +23,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet("ignore-filter")]
-        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListDistrictIgnoreQueryFilterDto query)
+        public async Task<IActionResult> GetListIgnoreQueryFilterAsync([FromQuery] GetListDistrictIgnoreQueryFilterQuery query)
         {
-            var result = await _sender.Send(new GetListDistrictIgnoreQueryFilterQuery { GetListDistrictIgnoreQueryFilterDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,
@@ -35,9 +35,9 @@ namespace Pizza4Ps.CustomerService.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetListAsync([FromQuery] GetListDistrictDto query)
+        public async Task<IActionResult> GetListAsync([FromQuery] GetListDistrictQuery query)
         {
-            var result = await _sender.Send(new GetListDistrictQuery { GetListDistrictDto = query });
+            var result = await _sender.Send(query);
             return Ok(new ApiResponse
             {
                 Result = result,

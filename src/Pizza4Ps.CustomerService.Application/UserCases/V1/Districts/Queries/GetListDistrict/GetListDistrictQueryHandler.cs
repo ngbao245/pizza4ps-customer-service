@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Pizza4Ps.CustomerService.Application.Abstractions;
 using Pizza4Ps.CustomerService.Application.DTOs.Districts;
 using Pizza4Ps.CustomerService.Domain.Abstractions.Repositories;
 using Pizza4Ps.CustomerService.Domain.Constants;
@@ -9,7 +10,7 @@ using System.Linq.Dynamic.Core;
 
 namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.GetListDistrict
 {
-    public class GetListDistrictQueryHandler : IRequestHandler<GetListDistrictQuery, GetListDistrictQueryResponse>
+    public class GetListDistrictQueryHandler : IRequestHandler<GetListDistrictQuery, PaginatedResultDto<DistrictDto>>
     {
         private readonly IMapper _mapper;
         private readonly IDistrictRepository _districtRepository;
@@ -20,20 +21,20 @@ namespace Pizza4Ps.CustomerService.Application.UserCases.V1.Districts.Queries.Ge
             _districtRepository = districtRepository;
         }
 
-        public async Task<GetListDistrictQueryResponse> Handle(GetListDistrictQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResultDto<DistrictDto>> Handle(GetListDistrictQuery request, CancellationToken cancellationToken)
         {
             var query = _districtRepository.GetListAsNoTracking(
-                x => (request.GetListDistrictDto.Name == null || x.Name.Contains(request.GetListDistrictDto.Name))
-                && (request.GetListDistrictDto.ProvinceId == null || x.ProvinceId == request.GetListDistrictDto.ProvinceId),
-                includeProperties: request.GetListDistrictDto.includeProperties);
+                x => (request.Name == null || x.Name.Contains(request.Name))
+                && (request.ProvinceId == null || x.ProvinceId == request.ProvinceId),
+                includeProperties: request.IncludeProperties);
             var entities = await query
-                .OrderBy(request.GetListDistrictDto.SortBy)
-                .Skip(request.GetListDistrictDto.SkipCount).Take(request.GetListDistrictDto.TakeCount).ToListAsync();
+                .OrderBy(request.SortBy)
+                .Skip(request.SkipCount).Take(request.TakeCount).ToListAsync();
             if (!entities.Any())
                 throw new BusinessException(BussinessErrorConstants.DistrictErrorConstant.DISTRICT_NOT_FOUND);
             var result = _mapper.Map<List<DistrictDto>>(entities);
             var totalCount = await query.CountAsync();
-            return new GetListDistrictQueryResponse(result, totalCount);
+            return new PaginatedResultDto<DistrictDto>(result, totalCount);
         }
     }
 }
