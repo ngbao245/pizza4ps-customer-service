@@ -8,10 +8,7 @@
 
   <ItemGroup>
     <Folder Include="DependencyInjection\Options\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Mappers\" />
     <Folder Include="Models\" />
-    <Folder Include="UserCases\V1\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
