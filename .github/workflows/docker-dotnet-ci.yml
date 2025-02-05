@@ -42,9 +42,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/dotnet-app:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/dotnet-app:v${{ github.run_number }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/dotnet-app:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/pizza4ps-customer-service:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/pizza4ps-customer-service:v${{ github.run_number }}
 
   deploy:
     needs: build_and_push
